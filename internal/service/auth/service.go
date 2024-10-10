@@ -74,12 +74,12 @@ func (s *Service) Login(ctx context.Context, login, password string) (access, re
 
 	tokenUUID := uuid.New()
 
-	access, err = s.getToken(tokenUUID, s.accessExpireTime, user.Login, user.Role)
+	access, err = s.getToken(tokenUUID, s.accessExpireTime, user.UUID, user.Login, user.Role)
 	if err != nil {
 		return "", "", fmt.Errorf("[ Auth Service ] login err: %w", err)
 	}
 
-	refresh, err = s.getToken(tokenUUID, s.refreshExpireTime, user.Login, user.Role)
+	refresh, err = s.getToken(tokenUUID, s.refreshExpireTime, user.UUID, user.Login, user.Role)
 	if err != nil {
 		return "", "", fmt.Errorf("[ Auth Service ] login err: %w", err)
 	}
@@ -116,12 +116,12 @@ func (s *Service) Refresh(ctx context.Context, oldAccess, oldRefresh string) (ac
 		return "", "", service.ErrTokenExpired
 	}
 
-	access, err = s.getToken(refreshClaims.UUID, s.accessExpireTime, refreshClaims.Login, refreshClaims.Role)
+	access, err = s.getToken(refreshClaims.UUID, s.accessExpireTime, refreshClaims.UserUUID, refreshClaims.Login, refreshClaims.Role)
 	if err != nil {
 		return "", "", fmt.Errorf("[ Auth Service ] refresh err: %w", err)
 	}
 
-	refresh, err = s.getToken(refreshClaims.UUID, s.refreshExpireTime, refreshClaims.Login, refreshClaims.Role)
+	refresh, err = s.getToken(refreshClaims.UUID, s.refreshExpireTime, refreshClaims.UserUUID, refreshClaims.Login, refreshClaims.Role)
 	if err != nil {
 		return "", "", fmt.Errorf("[ Auth Service ] refresh err: %w", err)
 	}
@@ -159,12 +159,13 @@ func (s *Service) keyFunc(t *jwt.Token) (interface{}, error) {
 	return s.jwtSecret, nil
 }
 
-func (s *Service) getToken(uuid uuid.UUID, expireTime time.Duration, login string, role constant.Role) (string, error) {
+func (s *Service) getToken(uuid uuid.UUID, expireTime time.Duration, userUUID uuid.UUID, login string, role constant.Role) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		constant.TokenUUID:    uuid,
-		constant.LoginClaims:  login,
-		constant.RoleClaims:   role,
-		constant.ExpireClaims: time.Now().UTC().Add(expireTime),
+		constant.TokenUUIDClaims: uuid,
+		constant.LoginClaims:     login,
+		constant.RoleClaims:      role,
+		constant.UserUUIDClaims:  userUUID,
+		constant.ExpireClaims:    time.Now().UTC().Add(expireTime),
 	})
 
 	signedToken, err := token.SignedString(s.jwtSecret)

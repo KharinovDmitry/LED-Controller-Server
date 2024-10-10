@@ -7,6 +7,7 @@ import (
 	"DynamicLED/internal/repository/postgres/panel"
 	"DynamicLED/internal/repository/postgres/user"
 	"DynamicLED/internal/repository/redis"
+	"DynamicLED/internal/repository/redis/display"
 	"DynamicLED/internal/repository/redis/token"
 	"fmt"
 )
@@ -18,6 +19,7 @@ type Manager struct {
 	repository.User
 	repository.Panel
 	repository.Token
+	repository.Display
 }
 
 func New(cfg *config.Config) *Manager {
@@ -37,6 +39,7 @@ func (m *Manager) Init() error {
 	m.User = user.New(postgresConn)
 	m.Panel = panel.New(postgresConn)
 	m.Token = token.New(redisClient)
+	m.Display = display.New(redisClient)
 
 	return nil
 }

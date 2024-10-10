@@ -7,5 +7,8 @@ var (
 	ErrInvalidCredentials = fmt.Errorf("неверные логин или пароль")
 	ErrTokenExpired       = fmt.Errorf("истекло действие токена")
 
-	ErrPanelNotFound = fmt.Errorf("панель не найдена, проверьте ключ и перезагрузите панель")
+	ErrPanelNotFound      = fmt.Errorf("панель не найдена, проверьте ключ или перезагрузите панель")
+	ErrPanelNotRegistered = fmt.Errorf("панель не зарегестрирована")
+
+	ErrCacheUpdate = fmt.Errorf("cache update error")
 )

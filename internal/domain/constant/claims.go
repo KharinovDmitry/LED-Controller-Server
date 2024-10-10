@@ -1,8 +1,9 @@
 package constant
 
 const (
-	TokenUUID    = "uuid"
-	LoginClaims  = "userUUID"
-	RoleClaims   = "role"
-	ExpireClaims = "expire"
+	TokenUUIDClaims = "uuid"
+	UserUUIDClaims  = "UserUUIDClaims"
+	LoginClaims     = "login"
+	RoleClaims      = "role"
+	ExpireClaims    = "expire"
 )

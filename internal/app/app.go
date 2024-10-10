@@ -2,6 +2,7 @@ package app
 
 import (
 	"DynamicLED/config"
+	"DynamicLED/internal/client/panel"
 	"DynamicLED/internal/http"
 	"DynamicLED/internal/http/handler"
 	"DynamicLED/internal/repository"
@@ -17,10 +18,11 @@ type App struct {
 }
 
 func New(cfg *config.Config) *App {
+	panelClient := panel.New()
 	repositories := repository.New(cfg)
-	services := service.New(cfg, repositories)
+	services := service.New(cfg, repositories, panelClient)
 
-	controller := handler.New(services, repositories)
+	controller := handler.New(services, repositories, panelClient)
 	return &App{
 		Port:       cfg.Server.Port,
 		Controller: controller,

@@ -6,6 +6,12 @@ import (
 	"strings"
 )
 
+var (
+	Red, _   = NewColorRGBFromString("#FF0000")
+	Green, _ = NewColorRGBFromString("#00FF00")
+	Blue, _  = NewColorRGBFromString("#0000FF")
+)
+
 type ColorRGB struct {
 	R byte
 	G byte

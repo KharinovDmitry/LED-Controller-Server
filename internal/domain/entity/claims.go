@@ -9,8 +9,9 @@ import (
 
 type Claims struct {
 	jwt.StandardClaims
-	UUID   uuid.UUID     `json:"uuid"`
-	Login  string        `json:"login"`
-	Role   constant.Role `json:"role"`
-	Expire time.Time     `json:"expire"`
+	UUID     uuid.UUID     `json:"uuid"`
+	UserUUID uuid.UUID     `json:"userUUID"`
+	Login    string        `json:"login"`
+	Role     constant.Role `json:"role"`
+	Expire   time.Time     `json:"expire"`
 }
