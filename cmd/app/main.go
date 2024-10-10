@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	cfg, err := config.ReadConfig("./config/config.yaml")
+	cfg, err := config.ReadConfig("config/config.yaml")
 	if err != nil {
 		log.Fatal(err.Error())
 	}

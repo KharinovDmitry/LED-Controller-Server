@@ -7,6 +7,17 @@ import (
 	"time"
 )
 
+type Config struct {
+	Server   ServerConfig   `yaml:"server"`
+	Auth     AuthConfig     `yaml:"auth"`
+	Redis    RedisConfig    `yaml:"redis"`
+	Postgres PostgresConfig `yaml:"postgres"`
+}
+
+type ServerConfig struct {
+	Port string `yaml:"port"`
+}
+
 type AuthConfig struct {
 	JwtSecret         string        `yaml:"jwtSecret"`
 	Salt              string        `yaml:"salt"`
@@ -14,13 +25,22 @@ type AuthConfig struct {
 	AccessExpireTime  time.Duration `yaml:"accessExpireTime"`
 }
 
-type Config struct {
-	Port string     `yaml:"port"`
-	Auth AuthConfig `yaml:"auth"`
+type RedisConfig struct {
+	Host     string `yaml:"host"`
+	Password string `yaml:"password"`
+	DB       int    `yaml:"db"`
+}
+
+type PostgresConfig struct {
+	User     string `yaml:"user"`
+	Password string `yaml:"password"`
+	Host     string `yaml:"host"`
+	Port     string `yaml:"port"`
+	DBName   string `yaml:"dbname"`
 }
 
 func ReadConfig(path string) (*Config, error) {
-	file, err := os.Open(path)
+	file, err := os.OpenFile(path, os.O_RDWR, os.ModePerm)
 	if err != nil {
 		return nil, fmt.Errorf("[ Config ] open file err: %w", err)
 	}

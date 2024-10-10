@@ -22,7 +22,7 @@ func New(cfg *config.Config) *App {
 
 	controller := handler.New(services, repositories)
 	return &App{
-		Port:       cfg.Port,
+		Port:       cfg.Server.Port,
 		Controller: controller,
 		Router:     http.SetupRouter(controller),
 	}

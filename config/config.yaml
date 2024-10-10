@@ -1,0 +1,17 @@
+server:
+    port: ""
+auth:
+    jwtSecret: ""
+    salt: ""
+    refreshExpireTime: 0s
+    accessExpireTime: 0s
+redis:
+    host: ""
+    password: ""
+    db: 0
+postgres:
+    user: ""
+    password: ""
+    host: ""
+    port: ""
+    dbname: ""

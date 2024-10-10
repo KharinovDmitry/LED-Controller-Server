@@ -72,7 +72,7 @@ func (controller *Controller) Refresh(c *gin.Context) {
 		return
 	}
 
-	access, err := controller.Service.Auth.Refresh(c.Request.Context(), tokens.Access, tokens.Refresh)
+	access, refresh, err := controller.Service.Auth.Refresh(c.Request.Context(), tokens.Access, tokens.Refresh)
 	if err != nil {
 		if errors.Is(err, service.ErrInvalidCredentials) ||
 			errors.Is(err, service.ErrTokenExpired) {
@@ -85,5 +85,5 @@ func (controller *Controller) Refresh(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, dto.NewTokenPair(access, tokens.Refresh))
+	c.JSON(http.StatusOK, dto.NewTokenPair(access, refresh))
 }
