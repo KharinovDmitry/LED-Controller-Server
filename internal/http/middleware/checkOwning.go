@@ -27,6 +27,7 @@ func CheckPanelOwningByUUID(panelRepo repository.Panel) func(c *gin.Context) {
 				c.AbortWithStatusJSON(http.StatusNotFound, service.ErrPanelNotFound)
 				return
 			}
+
 			slog.Error(c.FullPath(), slog.String(constant.ErrorField, err.Error()))
 			c.AbortWithStatus(http.StatusInternalServerError)
 			return
@@ -61,6 +62,7 @@ func CheckPanelOwningByMac(panelRepo repository.Panel) func(c *gin.Context) {
 				c.AbortWithStatusJSON(http.StatusNotFound, service.ErrPanelNotFound)
 				return
 			}
+
 			slog.Error(c.FullPath(), slog.String(constant.ErrorField, err.Error()))
 			c.AbortWithStatus(http.StatusInternalServerError)
 			return
