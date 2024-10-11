@@ -23,14 +23,10 @@ func PanelsToDTO(panels []entity.Panel) []Panel {
 	return res
 }
 
-type AddPanelRequest struct {
+type RegisterPanelRequest struct {
 	Rev  int    `json:"rev"`
 	Mac  string `json:"mac"`
 	Host string `json:"host"`
-}
-
-type RegisterPanelRequest struct {
-	Key string `json:"key"`
 }
 
 type PanelTask struct {

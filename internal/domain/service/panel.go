@@ -7,11 +7,8 @@ import (
 )
 
 type Panel interface {
-	// CreatePanel панель заводится в бд
-	CreatePanel(ctx context.Context, rev int, mac, host string) error
-
-	// RegisterPanel пользователь регистрирует панель на себя по уникальному ключу
-	RegisterPanel(ctx context.Context, key string, userUUID uuid.UUID) error
+	// RegisterPanel мп получив необхоимые данные от панели регистрирует его через этот сервис
+	RegisterPanel(ctx context.Context, rev int, mac, host string, userUUID uuid.UUID) error
 
 	// SendTaskToPanel отправка задачи на панель
 	SendTaskToPanel(ctx context.Context, panelUUID uuid.UUID, task entity.PanelTask) error

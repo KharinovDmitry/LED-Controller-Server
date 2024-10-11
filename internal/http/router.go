@@ -12,7 +12,6 @@ func SetupRouter(controller *handler.Controller) *gin.Engine {
 	router.GET("/health", controller.Health)
 
 	api := router.Group("/api")
-	api.Use(middleware.Auth(controller.Service.Auth))
 
 	auth := api.Group("/auth")
 	{
@@ -22,13 +21,14 @@ func SetupRouter(controller *handler.Controller) *gin.Engine {
 	}
 
 	user := api.Group("/user")
+	user.Use(middleware.Auth(controller.Service.Auth))
 	{
 		user.PUT("/update")
 	}
 
 	panel := api.Group("/panel")
+	panel.Use(middleware.Auth(controller.Service.Auth))
 	{
-		panel.POST("/create", controller.CreatePanel)
 		panel.POST("/register", controller.RegisterPanel)
 		panel.POST("/send/:uuid", controller.SendTaskToPanel).Use(middleware.CheckPanelOwningByUUID(controller.Repository.Panel))
 

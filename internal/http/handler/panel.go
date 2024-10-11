@@ -12,22 +12,6 @@ import (
 	"net/http"
 )
 
-func (controller *Controller) CreatePanel(c *gin.Context) {
-	var req dto.AddPanelRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, dto.NewErrorResponse(err.Error()))
-		return
-	}
-
-	if err := controller.Service.CreatePanel(c.Request.Context(), req.Rev, req.Host, req.Host); err != nil {
-		slog.Error(c.FullPath(), slog.String(constant.ErrorField, err.Error()))
-		c.AbortWithStatus(http.StatusInternalServerError)
-		return
-	}
-
-	c.Status(http.StatusOK)
-}
-
 func (controller *Controller) RegisterPanel(c *gin.Context) {
 	_, _, userUUID, err := util.GetClaimsFromContext(c)
 	if err != nil {
@@ -41,7 +25,7 @@ func (controller *Controller) RegisterPanel(c *gin.Context) {
 		return
 	}
 
-	if err := controller.Service.RegisterPanel(c.Request.Context(), req.Key, userUUID); err != nil {
+	if err := controller.Service.RegisterPanel(c.Request.Context(), req.Rev, req.Mac, req.Host, userUUID); err != nil {
 		if errors.Is(err, service.ErrPanelNotFound) {
 			c.AbortWithStatusJSON(http.StatusNotFound, dto.NewErrorResponse(err.Error()))
 			return

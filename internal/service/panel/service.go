@@ -2,18 +2,14 @@ package panel
 
 import (
 	"DynamicLED/internal/domain/client"
-	"DynamicLED/internal/domain/constant"
 	"DynamicLED/internal/domain/entity"
 	"DynamicLED/internal/domain/repository"
 	"DynamicLED/internal/domain/service"
 	"context"
-	"crypto/sha256"
-	"encoding/binary"
 	"errors"
 	"fmt"
 	"github.com/google/uuid"
 	"net/url"
-	"strconv"
 )
 
 type Service struct {
@@ -30,33 +26,31 @@ func New(panel repository.Panel, display repository.Display, client client.Panel
 	}
 }
 
-func (s Service) CreatePanel(ctx context.Context, rev int, mac, host string) error {
-	err := s.panel.AddPanel(ctx, entity.Panel{
-		Rev:  rev,
-		Mac:  mac,
-		Key:  getKeyByMac(mac),
-		Host: host,
-	})
-	if err != nil {
-		return fmt.Errorf("[ Panel Service ] create panel: %w", err)
-	}
-
-	return nil
-}
-
-func (s Service) RegisterPanel(ctx context.Context, key string, userUUID uuid.UUID) error {
-	panel, err := s.panel.GetPanelByKey(ctx, key)
-	if err != nil {
-		if errors.Is(err, repository.ErrNotFound) {
-			return service.ErrPanelNotFound
+func (s Service) RegisterPanel(ctx context.Context, rev int, mac, host string, userUUID uuid.UUID) error {
+	panel, err := s.panel.GetPanelByMac(ctx, mac)
+	if err == nil {
+		err := s.panel.UpdatePanel(ctx, entity.Panel{
+			UUID:  panel.UUID,
+			Owner: userUUID,
+			Mac:   mac,
+			Rev:   rev,
+			Host:  host,
+		})
+		if err != nil {
+			return fmt.Errorf("[ Panel Service ] register panel: %w", err)
 		}
 
-		return fmt.Errorf("[ Panel Service ] register panel: %w", err)
+		return nil
 	}
 
-	panel.Owner = userUUID
-	if err := s.panel.UpdatePanel(ctx, panel); err != nil {
-		return fmt.Errorf("[ Panel Service ] update panel: %w", err)
+	err = s.panel.AddPanel(ctx, entity.Panel{
+		Owner: userUUID,
+		Mac:   mac,
+		Rev:   rev,
+		Host:  host,
+	})
+	if err != nil {
+		return fmt.Errorf("[ Panel Service ] register panel: %w", err)
 	}
 
 	return nil
@@ -177,10 +171,4 @@ func (s Service) SyncPanelDisplay(ctx context.Context, panelUUID uuid.UUID) (ent
 	}
 
 	return display, nil
-}
-
-func getKeyByMac(mac string) string {
-	hash := sha256.New().Sum([]byte(mac))
-	key := int(binary.BigEndian.Uint32(hash)) % constant.PanelKeyLengthMask
-	return strconv.Itoa(key)
 }
