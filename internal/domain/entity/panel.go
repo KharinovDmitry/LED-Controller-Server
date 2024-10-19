@@ -8,7 +8,6 @@ type Panel struct {
 	UUID  uuid.UUID
 	Owner uuid.UUID
 	Mac   string
-	Key   string
 	Rev   int
 	Host  string
 }
@@ -37,4 +36,10 @@ func NewPanelPosition(x, y int) *PanelPosition {
 type PanelTask struct {
 	Position PanelPosition
 	Color    ColorRGB
+}
+
+type ButchReport struct {
+	AllCount int
+	ErrCount int
+	SucCount int
 }

@@ -7,7 +7,7 @@ import (
 )
 
 type Panel interface {
-	// RegisterPanel мп получив необхоимые данные от панели регистрирует его через этот сервис
+	// RegisterPanel панель сначала регистрируется, а потмо периодически обновляет данные
 	RegisterPanel(ctx context.Context, rev int, mac, host string, userUUID uuid.UUID) error
 
 	// SendTaskToPanel отправка задачи на панель

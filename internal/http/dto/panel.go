@@ -9,7 +9,6 @@ type Panel struct {
 	UUID  uuid.UUID `json:"uuid"`
 	Owner uuid.UUID `json:"owner"`
 	Mac   string    `json:"mac"`
-	Key   string    `json:"key"`
 	Rev   int       `json:"rev"`
 	Host  string    `json:"host"`
 }

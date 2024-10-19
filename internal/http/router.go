@@ -29,7 +29,7 @@ func SetupRouter(controller *handler.Controller) *gin.Engine {
 	panel := api.Group("/panel")
 	panel.Use(middleware.Auth(controller.Service.Auth))
 	{
-		panel.POST("/register", controller.RegisterPanel)
+		panel.POST("/ddns", controller.RegisterPanel)
 		panel.POST("/send/:uuid", controller.SendTaskToPanel).Use(middleware.CheckPanelOwningByUUID(controller.Repository.Panel))
 
 		panel.GET("/mac/:mac", controller.GetPanelByMAC).Use(middleware.CheckPanelOwningByMac(controller.Repository.Panel))
